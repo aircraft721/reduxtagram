@@ -6,13 +6,15 @@ import {bindActionCreators} from 'redux';
 
 class Single extends Component {
     render(){
-        const i = this.props.posts.findIndex((post) => post.code === this.props.match.params.postId );
+        const {postId} = this.props.match.params;
+        const i = this.props.posts.findIndex((post) => post.code === postId );
         const post = this.props.posts[i];
+        const postComments = this.props.comments[postId] || [];
         
         return(
             <div>
                 <Photo i={i} post={post} {...this.props} />
-                <Comments />
+                <Comments postComments={postComments} {...this.props}/>
             </div>
         );
     }
