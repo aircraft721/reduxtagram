@@ -7,7 +7,7 @@ export default class Main extends Component {
         return (
             <div>
                 <h1>
-                     Reduxtagram
+                     Redux
                 </h1>
                 {this.props.posts.map((post, i) => {
                     return <Photo key={i} {...this.props} post={post}/>
