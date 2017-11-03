@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import {connect} from 'react-redux';
-import {addComment} from '../actions/index';
+import {addComment, removeComment} from '../actions/index';
 import {bindActionCreators} from 'redux';
 
 
@@ -13,26 +13,10 @@ const CustomInput = (props) => {
     );
 }
 
-
 class Comments extends Component {
-    renderComment(comment,i) {
-        return (
-            <div key={i}>
-                <p>
-                    <strong>{comment.user}</strong>
-                    {comment.text}
-                    <button>&times;</button>
-                </p>
-            </div>
-        )
-    }
-
     handleSubmit = (e) => {
         e.preventDefault();
         const {postId} = this.props.match.params;
-        // console.log(postId);
-        // console.log(this.author.value);
-        // console.log(this.comment.value);
         const author = this.author.value;
         const comment = this.comment.value;
         this.props.addComment(postId, author, comment);
@@ -41,24 +25,29 @@ class Comments extends Component {
     render(){
         return(
             <div>
-                {this.props.postComments.map(this.renderComment)}
+                {this.props.postComments.map((comment, i)=>{
+                    return (
+                        <div key={i}>
+                            <span className='span1'>{comment.user}</span>
+                            <span className='span2'>{comment.text}</span>
+                            <button onClick={this.props.removeComment.bind(null, this.props.match.params.postId, i)}>&times;</button>
+                        </div>
+                    )
+                })}
+
+                <button onClick={this.props.removeComment.bind(null)}>&times;</button>
                 <form onSubmit={this.handleSubmit}>
                     <CustomInput 
                         author={input => this.author = input}
                         comment={input => this.comment = input}
                     />
-                    <input type="submit" hidden />
+                    <input type="submit" 
+                        onClick={this.resetInput}
+                    />
                 </form>
             </div>
         );
     }
 }
 
-
-
-function mapDispatchToProps(dispatch){
-    return bindActionCreators({ addComment: addComment },dispatch)
-}
-
-
-export default connect(null, mapDispatchToProps)(Comments);
+export default connect(null, {addComment, removeComment})(Comments);
