@@ -3,12 +3,15 @@ export const increment = (index) => ({
     index
 });
 
-export const addComment = (postId, author, comment) => ({
-    type: 'ADD_COMMENT',
-    postId,
-    author,
-    comment
-});
+export function addComment(postId, author, comment) {
+    console.log('dispatching add comment');
+    return {
+        type: 'ADD_COMMENT',
+        postId,
+        author,
+        comment
+    }
+}
 
 export const removeComment = (postId, i) => ({
     type: 'REMOVE_COMMENT',

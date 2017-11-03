@@ -1,12 +1,20 @@
 import React,{Component} from 'react';
+import {connect} from 'react-redux';
+import {addComment} from '../actions/index';
+import {bindActionCreators} from 'redux';
 
-export default class Comments extends Component {
 
-    // componentDidMount(){
-    //     console.log(this.inputName);
-    //     console.log(this.inputAuthor);
-    // }
-    
+const CustomInput = (props) => {
+    return (
+        <div>
+            <input type="text" placeholder='name' ref={props.author}/>
+            <input type="text" placeholder='author' ref={props.comment}/>
+        </div>
+    );
+}
+
+
+class Comments extends Component {
     renderComment(comment,i) {
         return (
             <div key={i}>
@@ -21,27 +29,23 @@ export default class Comments extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        // //const {postId} = this.props.match.params;
-        // const author = this.refs.author.value;
-        // const comment = this.refs.comment.value;
-        // console.log( author, comment);
-        console.log(this.firstName.value);
-        console.log(this.inputAuthor.value);
-        
-        //console.log(this.inputAuthor);
-        // console.log(this.refs.inputName.value);
-        // console.log(this.refs.inputAuthor.value);
+        const {postId} = this.props.match.params;
+        // console.log(postId);
+        // console.log(this.author.value);
+        // console.log(this.comment.value);
+        const author = this.author.value;
+        const comment = this.comment.value;
+        this.props.addComment(postId, author, comment);
     }
 
-    //ref={input => this.textInput = input} 
     render(){
         return(
             <div>
                 {this.props.postComments.map(this.renderComment)}
                 <form onSubmit={this.handleSubmit}>
                     <CustomInput 
-                        firstName={input => this.firstName = input}
-                        inputAuthor={input => this.inputAuthor = input}
+                        author={input => this.author = input}
+                        comment={input => this.comment = input}
                     />
                     <input type="submit" hidden />
                 </form>
@@ -50,22 +54,11 @@ export default class Comments extends Component {
     }
 }
 
-// <input 
-// type="text" 
-// inputName = {(input) => this.inputName = input }
-// placeholder="name"
-// />
-// <input 
-// type="text" 
-// inputAuthor = {(input) => this.inputAuthor = input }
-// placeholder="author"
-// />
 
-const CustomInput = (props) => {
-    return (
-        <div>
-            <input type="text" placeholder='name' ref={props.firstName}/>
-            <input type="text" placeholder='author' ref={props.inputAuthor}/>
-        </div>
-    );
+
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({ addComment: addComment },dispatch)
 }
+
+
+export default connect(null, mapDispatchToProps)(Comments);
